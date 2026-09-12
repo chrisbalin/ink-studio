@@ -16,4 +16,4 @@ Additional generators: Gray–Scott reaction–diffusion (background worker), to
 
 ## Deployment
 
-GitHub Actions validates the generators and BMP encoder, then publishes `dist` to GitHub Pages on each push to `main`. The workflow can also be run manually from the Actions tab. In Settings → Pages, the source must be GitHub Actions.
+GitHub Actions validates the generators and BMP encoder, then packages `dist` with content-versioned asset filenames and publishes it to GitHub Pages on each push to `main`. The workflow can also be run manually from the Actions tab. In Settings → Pages, the source must be GitHub Actions.
