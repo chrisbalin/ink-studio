@@ -11,3 +11,5 @@
  #parameter-panel{right:0;box-shadow:-8px 0 24px #30352c20}
 }
 @media(max-width:700px){.workspace aside{top:60px}.preview-toolbar{padding:0 10px}.preview-tools{gap:3px}}
+
+#sidebar{display:flex;flex-direction:column}.repo-link{display:flex;align-items:center;gap:8px;margin-top:auto;padding:22px;color:#50594c;font-size:12px;text-decoration:underline;text-underline-offset:3px}.repo-link:hover{color:#263e2a}.repo-link:focus-visible{outline:2px solid #45604d;outline-offset:-6px}.repo-link svg{width:15px;height:15px;flex-shrink:0}
