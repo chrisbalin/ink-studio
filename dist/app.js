@@ -29,7 +29,7 @@ function renderControls(){
  else{for(const [value,text]of c.options){const o=new Option(text,value);input.add(o);}input.value=settings[active.id][c.key];wrap.append(input);input.onchange=()=>{settings[active.id][c.key]=input.value;schedule();};}
  $('controls').append(wrap);}
 }
-for(const g of generators){const b=document.createElement('button');b.dataset.id=g.id;b.innerHTML=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${g.icon}"/></svg><span>${g.name}</span>`;b.onclick=()=>{active=g;renderControls();schedule();if(narrowPanels.matches){setGenerators(false);}};$('generators').append(b);}
+for(const g of generators){const b=document.createElement('button');b.dataset.id=g.id;b.innerHTML=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${g.icon}"/></svg><span>${g.name}</span>`;b.onclick=()=>{active=g;renderControls();schedule();};$('generators').append(b);}
 function schedule(){
  if(!engine)return;
  renderVersion++;
@@ -90,15 +90,6 @@ function newSeed(){seed=crypto.getRandomValues(new Uint32Array(1))[0];$('seed').
 $('reseed').onclick=()=>{newSeed();schedule();};$('seed').onchange=()=>{seed=Math.max(0,Math.min(4294967295,Math.trunc(Number($('seed').value)||0)));$('seed').value=seed;schedule();};
 $('randomize').onclick=()=>{newSeed();for(const c of active.controls){let v;if(c.type==='toggle')v=Math.random()<.5;else if(c.type==='select')v=c.options[Math.floor(Math.random()*c.options.length)][0];else v=Number((c.min+Math.floor(Math.random()*(Math.round((c.max-c.min)/c.step)+1))*c.step).toFixed(4));settings[active.id][c.key]=v;}if(active.id==='stipple'){const s=settings.stipple;s.max=Math.max(s.min,s.max);}renderControls();schedule();};
 $('reset').onclick=()=>{settings[active.id]=Object.fromEntries(active.controls.map(c=>[c.key,c.value]));renderControls();schedule();};
-const narrowPanels=matchMedia('(max-width:1000px)');
-function setGenerators(open){
- document.body.classList.toggle('generators-hidden',!open);
- $('collapse').setAttribute('aria-expanded',open);
-}
-$('collapse').onclick=()=>setGenerators(document.body.classList.contains('generators-hidden'));
-function adaptPanels(){setGenerators(!narrowPanels.matches);}
-narrowPanels.addEventListener('change',adaptPanels);adaptPanels();
-document.addEventListener('keydown',event=>{if(event.key==='Escape'&&narrowPanels.matches&&!$('instructions').matches(':popover-open')){const focused=$('sidebar').contains(document.activeElement);setGenerators(false);if(focused)$('collapse').focus();}});
 function encodeBMP(pixels){const stride=Math.ceil(W/32)*4,offset=62,size=offset+stride*H,buffer=new ArrayBuffer(size),v=new DataView(buffer),bytes=new Uint8Array(buffer);v.setUint16(0,0x4d42,true);v.setUint32(2,size,true);v.setUint32(10,offset,true);v.setUint32(14,40,true);v.setInt32(18,W,true);v.setInt32(22,H,true);v.setUint16(26,1,true);v.setUint16(28,1,true);v.setUint32(34,stride*H,true);v.setInt32(38,2835,true);v.setInt32(42,2835,true);v.setUint32(46,2,true);v.setUint32(50,2,true);bytes.set([0,0,0,0,255,255,255,0],54);for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(pixels[y*W+x])bytes[offset+(H-1-y)*stride+(x>>3)]|=128>>(x&7);return buffer;}
 $('save').onclick=()=>{if(pending||$('save').disabled||!binary)return;const blob=new Blob([encodeBMP(binary)],{type:'image/bmp'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`ink-studio-${active.id}-${seed}.bmp`;a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);};
 const grainCtx=$('grain').getContext('2d'),grainImage=grainCtx.createImageData(W,H);let n=12345;for(let i=0;i<W*H;i++){n=(Math.imul(n,1664525)+1013904223)>>>0;const v=n>>>24;grainImage.data[i*4]=grainImage.data[i*4+1]=grainImage.data[i*4+2]=v;grainImage.data[i*4+3]=255;}grainCtx.putImageData(grainImage,0,0);
