@@ -24,6 +24,15 @@ jobs:
         run: |
           node tests/algorithms.cjs
           node tests/bmp.cjs
+      - name: Version stylesheet to prevent stale browser caches
+        run: |
+          node <<'JS'
+          const fs = require('node:fs');
+          const crypto = require('node:crypto');
+          const hash = crypto.createHash('sha256').update(fs.readFileSync('dist/style.css')).digest('hex').slice(0, 12);
+          const html = fs.readFileSync('dist/index.html', 'utf8').replace(/href="style\.css(?:\?[^"\s]*)?"/, 'href="style.css?v=' + hash + '"');
+          fs.writeFileSync('dist/index.html', html);
+          JS
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:

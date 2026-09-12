@@ -14,8 +14,8 @@
 
 #sidebar{display:flex;flex-direction:column}.repo-link{display:flex;align-items:center;gap:8px;margin-top:auto;padding:22px;color:#50594c;font-size:12px;text-decoration:underline;text-underline-offset:3px}.repo-link:hover{color:#263e2a}.repo-link:focus-visible{outline:2px solid #45604d;outline-offset:-6px}.repo-link svg{width:15px;height:15px;flex-shrink:0}
 
-.parameter-actions{display:flex;align-items:center;gap:10px}.compact-button{font-size:11px;padding:5px 8px}.section-heading{gap:8px;flex-wrap:wrap}
-.nav-footer{margin-top:auto;padding:18px 22px;display:grid;gap:16px}.nav-footer .repo-link{margin:0;padding:0}
-.instructions-link{justify-self:start;border:0;background:transparent;padding:0;color:#50594c;font-size:12px;text-decoration:underline;text-underline-offset:3px}.instructions-link:hover{color:#263e2a;background:none}
+.parameter-actions{display:flex;align-items:center;gap:12px}.parameter-actions .text-button{padding:6px 8px}.compact-button{font-size:11px;padding:6px 10px}.section-heading{gap:12px;flex-wrap:wrap}
+.nav-footer{margin-top:auto;padding:24px 22px;display:grid;gap:14px}.nav-footer .repo-link{margin:0;padding:0}
+.instructions-link{justify-self:start;border:0;background:transparent;padding:8px 0;color:#50594c;font-size:12px;text-decoration:underline;text-underline-offset:3px}.instructions-link:hover{color:#263e2a;background:none}
 #instructions{width:min(560px,calc(100vw - 32px));max-height:calc(100dvh - 48px);overflow:auto;margin:auto;padding:24px 28px;background:#fafaf7;color:#292b28;border:1px solid #c9cdc2;border-radius:8px;box-shadow:0 12px 40px #30352c33;scrollbar-color:#bfc2b8 transparent}
 .guide-heading{display:flex;align-items:center;justify-content:space-between;gap:16px}.guide-heading h2{font-size:20px;color:#292b28;margin:0}#instructions h3{font-size:14px;margin:24px 0 8px}#instructions p,#instructions li{font-size:14px;line-height:1.65;color:#50564b}#instructions p{margin:10px 0}#instructions ol{padding-left:22px}#instructions li{padding-left:3px;margin:9px 0}#instructions a{color:#36513a;text-underline-offset:3px}#instructions a:focus-visible{outline:2px solid #45604d;outline-offset:3px}#instructions code,#instructions kbd{font-size:12px;background:#e9ece3;padding:2px 4px;border-radius:3px}
