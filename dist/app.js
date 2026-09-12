@@ -51,7 +51,7 @@ async function getReaction(s){
   worker.postMessage({seed,settings:s});
  });
 }
-async function drawPattern(version){const start=performance.now(),p=engine,s=settings[active.id];p.randomSeed(seed);p.noiseSeed(seed);p.background(255);p.stroke(0);p.strokeWeight(1);p.noFill();
+async function drawPattern(version){const p=engine,s=settings[active.id];p.randomSeed(seed);p.noiseSeed(seed);p.background(255);p.stroke(0);p.strokeWeight(1);p.noFill();
  if(active.id==='truchet'){const t=s.tile;p.strokeWeight(s.weight);if(s.fill){p.noStroke();p.fill(0);}for(let y=0;y<H;y+=t)for(let x=0;x<W;x+=t){if(p.random()<.5){p.arc(x,y,t,t,0,p.HALF_PI,s.fill?p.PIE:p.OPEN);p.arc(x+t,y+t,t,t,p.PI,p.PI+p.HALF_PI,s.fill?p.PIE:p.OPEN);}else{p.arc(x+t,y,t,t,p.HALF_PI,p.PI,s.fill?p.PIE:p.OPEN);p.arc(x,y+t,t,t,p.PI+p.HALF_PI,p.TWO_PI,s.fill?p.PIE:p.OPEN);}}}
  if(active.id==='flow'){p.strokeWeight(s.weight);for(let i=0;i<s.density;i++){let x=p.random(W),y=p.random(H);p.beginShape();for(let j=0;j<s.length;j++){p.vertex(x,y);const a=p.noise(x*s.scale,y*s.scale)*p.TWO_PI*2;x+=Math.cos(a)*s.step;y+=Math.sin(a)*s.step;if(x<0||x>W||y<0||y>H)break;}p.endShape();}}
  if(active.id==='subdivision'){function split(x,y,w,h,d){if(d>0){const f=p.random(.3,.7);if(w/h>1.3||(w/h>.7&&p.random()<.5)){split(x,y,w*f,h,d-1);split(x+w*f,y,w*(1-f),h,d-1);}else{split(x,y,w,h*f,d-1);split(x,y+h*f,w,h*(1-f),d-1);}return;}const gap=Math.min(s.gap,w/3,h/3);x+=gap/2;y+=gap/2;w-=gap;h-=gap;const filled=p.random()<s.fill;p.stroke(0);if(filled){p.fill(0);p.rect(x,y,w,h);p.noFill();}else{p.rect(x,y,w,h);if(s.hatch){const ctx=p.drawingContext;ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();for(let z=-h;z<w;z+=s.spacing)p.line(x+z,y,x+z+h,y+h);ctx.restore();}}}split(0,0,W,H,s.depth);}
@@ -82,7 +82,7 @@ async function drawPattern(version){const start=performance.now(),p=engine,s=set
   }p.updatePixels();
  }
  if(version!==renderVersion)return;
- p.loadPixels();binary=new Uint8Array(W*H);let black=0;for(let i=0;i<binary.length;i++){binary[i]=p.pixels[i*4]<128?0:1;black+=1-binary[i];}paintPreview();$('save').disabled=false;$('status').textContent=`${Math.round(black/binary.length*100)}% ink · ${Math.round(performance.now()-start)} ms`;}
+ p.loadPixels();binary=new Uint8Array(W*H);for(let i=0;i<binary.length;i++){binary[i]=p.pixels[i*4]<128?0:1;}paintPreview();$('save').disabled=false;$('status').textContent='';}
 function paintPreview(){if(!binary)return;const ctx=$('preview').getContext('2d'),img=ctx.createImageData(W,H);for(let i=0;i<binary.length;i++){const color=simulation?(binary[i]?[232,228,223]:[34,34,34]):(binary[i]?[255,255,255]:[0,0,0]);const j=i*4;img.data[j]=color[0];img.data[j+1]=color[1];img.data[j+2]=color[2];img.data[j+3]=255;}ctx.putImageData(img,0,0);}
 function setMode(value){simulation=value;$('paper').classList.toggle('simulation',value);$('simulation').setAttribute('aria-pressed',value);$('raw').setAttribute('aria-pressed',!value);$('preview-note').textContent=value?'E-ink simulation · preview only':'Raw 1-bit · exact export pixels';paintPreview();}
 $('simulation').onclick=()=>setMode(true);$('raw').onclick=()=>setMode(false);
